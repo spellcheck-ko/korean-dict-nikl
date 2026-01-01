@@ -9,7 +9,11 @@ def do_extract(filename, outdir):
     members = zf.namelist()
     members.sort()
     for member, i in zip(members, range(0, len(members))):
-        outfilename = member.split('_')[1]
+        # 1_5000_20251219.xml, 2_5000_20251219.xml, ...
+        assert(len(member.split('_')) == 3)
+        number = int(member.split('_')[0])
+        outfilename = f"{number:03}.xml"
+        print(f"Writing {member} -> {outfilename}...")
         s = zf.open(member).read().decode('UTF-8')
         with open(os.path.join(outdir, outfilename), 'w') as fp:
             fp.write(s)
